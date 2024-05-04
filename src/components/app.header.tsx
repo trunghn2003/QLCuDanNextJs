@@ -15,6 +15,7 @@ import Link from 'next/link';
 const pages = [
     { title: 'Apartments', path: '/aparments' },
     { title: 'Citizens', path: '/citizens' },
+    { title: 'Manager', path: '/citizenapartments' },
 ];
 
 function ResponsiveAppBar() {
