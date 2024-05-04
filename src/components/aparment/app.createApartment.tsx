@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createApartment } from '@/service/apartmentService';
 
 export const CreateApartment = () => {
     const queryClient = useQueryClient();
@@ -28,27 +29,15 @@ export const CreateApartment = () => {
 
     const { mutate } = useMutation({
         mutationFn: async () => {
+            
             try {
-                const response = await fetch('https://localhost:7199/api/Apartments', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ unitNumber, floor: Number(floor), size: Number(size) })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to add apartment.');
-                }
-
+                const data = { unitNumber, floor: Number(floor), size: Number(size) }
+                const response = await createApartment(data)
                 setSnackbarMessage('Apartment added successfully.');
                 setSnackbarOpen(true);
-                // Reset form fields after successful submission
                 setUnitNumber('');
                 setFloor('');
                 setSize('');
-                // Refresh the apartment list
                 queryClient.invalidateQueries({ queryKey: ['apartments'] });
 
             } catch (error) {

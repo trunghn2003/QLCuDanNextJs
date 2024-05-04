@@ -14,14 +14,10 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { CreateCitizenApartment } from './app.createCitizenApartment';
 import { EditCitizenApartment } from './app.editCitizenApartment';
-
-interface CitizenApartment {
-    citizenId: number;
-    apartmentId: number;
-    startDate: string;
-    endDate: string;
-}
-
+import { getCitizens } from '@/service/citizenService';
+import { getApartments } from '@/service/apartmentService';
+import { getCitizenApartments } from '@/service/citizenApartmentService';
+import { CitizenApartment } from '@/type';
 interface Citizen {
     citizenId: number;
     name: string;
@@ -33,18 +29,18 @@ interface Apartment {
 }
 
 const fetchCitizenApartments = async (): Promise<CitizenApartment[]> => {
-    const response = await fetch('https://localhost:7199/api/CitizenApartment');
-    return response.json();
+    const response = await getCitizenApartments();
+    return response;
 }
 
 const fetchCitizens = async (): Promise<Citizen[]> => {
-    const response = await fetch('https://localhost:7199/api/Citizens');
-    return response.json();
+    const response = await getCitizens()
+    return response;
 }
 
 const fetchApartments = async (): Promise<Apartment[]> => {
-    const response = await fetch('https://localhost:7199/api/Apartments');
-    return response.json();
+    const response = await getApartments()
+    return response
 }
 
 const formatDate = (dateString: string) => {

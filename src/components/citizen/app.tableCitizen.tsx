@@ -14,23 +14,12 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CreateCitizen } from './app.createCitizen';
 import { EditCitizen } from './app.editCitizen';
+import { deleteCitizen, getCitizens } from '@/service/citizenService';
+import { Citizen } from '@/type';
 
-interface Citizen {
-    citizenId: number;
-    name: string;
-    phoneNumber: string;
-    email: string;
-    dob: string; // The date is sent as a string
-}
-
-function fetchCitizens() {
-    return fetch('https://localhost:7199/api/Citizens')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        });
+const   fetchCitizens = async() => {
+    const result = await getCitizens();
+    return result;
 }
 
 function TableCitizen() {
@@ -39,19 +28,8 @@ function TableCitizen() {
 
     const { mutate } = useMutation({
         mutationFn: async (id: number) => {
-            try {
-                const response = await fetch(`https://localhost:7199/api/Citizens/${id}`, {
-                    method: "DELETE",
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to delete citizen.');
-                }
-                queryClient.invalidateQueries({queryKey: ['citizens']});
-
-            } catch (error) {
-                console.log(error);
-            }
+            const response = await deleteCitizen(id);
+            queryClient.invalidateQueries({queryKey: ['citizens']});
         }
     });
 

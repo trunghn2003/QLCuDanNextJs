@@ -13,21 +13,14 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { EditApartment } from './app.editApartment'; // Assuming you have an edit form
 import { CreateApartment } from './app.createApartment';
+import { deleteApartment, getApartments } from '@/service/apartmentService';
+import {Apartment} from "@/type/index";
 
-interface Apartment {
-    apartmentId: number;
-    unitNumber: string;
-    floor: number;
-    size: number;
-}
 
-function fetchApartments() {
-    return fetch('https://localhost:7199/api/Apartments').then(res => {
-        if (!res.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return res.json();
-    });
+const fetchApartments = async() => {
+    const result = await getApartments()
+    return result;
+   
 }
 
 function TableApartment() {
@@ -41,12 +34,7 @@ function TableApartment() {
 
     const deleteMutation = useMutation({
         mutationFn: async (id: number) => {
-            const response = await fetch(`https://localhost:7199/api/Apartments/${id}`, {
-                method: 'DELETE'
-            });
-            if (!response.ok) {
-                throw new Error('Failed to delete apartment.');
-            }
+            const response = await deleteApartment(id);
             queryClient.invalidateQueries({queryKey: ['apartments']});
         }
     });

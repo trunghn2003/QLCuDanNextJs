@@ -14,14 +14,10 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { isQueryKey } from "react-query/types/core/utils";
+import { CitizenApartment } from "@/type";
 
 interface EditCitizenApartmentProps {
-    citizenApartment: {
-        citizenId: number;
-        apartmentId: number;
-        startDate: string;
-        endDate?: string;
-    };
+    citizenApartment: CitizenApartment
     onClose: () => void;
 }
 

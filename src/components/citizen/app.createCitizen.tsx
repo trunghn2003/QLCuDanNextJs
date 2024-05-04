@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createCitizen } from "@/service/citizenService";
 
 export const CreateCitizen = () => {
     const queryClient = useQueryClient();
@@ -32,20 +33,8 @@ export const CreateCitizen = () => {
             try {
                 // Ensure the date is in 'YYYY-MM-DD' format
                 const formattedDob = new Date(dob).toISOString().split('T')[0];
-
-                const response = await fetch("https://localhost:7199/api/Citizens", {
-                    method: "POST",
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ name, dob: formattedDob, phoneNumber, email })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to add citizen.');
-                }
-
+                const data = { name, dob: formattedDob, phoneNumber, email }
+                const response = await createCitizen(data)
                 setSnackbarMessage('Citizen added successfully.');
                 setSnackbarOpen(true);
                 // Reset form fields after successful submission

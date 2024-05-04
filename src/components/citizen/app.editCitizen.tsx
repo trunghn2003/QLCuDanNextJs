@@ -12,15 +12,11 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { editCitizen } from "@/service/citizenService";
+import { Citizen } from "@/type";
 
 interface EditCitizenProps {
-    citizen: {
-        citizenId: number;
-        name: string;
-        dob: string;
-        phoneNumber: string;
-        email: string;
-    };
+    citizen: Citizen
     onClose: () => void;
 }
 
@@ -45,19 +41,7 @@ export const EditCitizen = ({ citizen, onClose }: EditCitizenProps) => {
     const { mutate } = useMutation({
         mutationFn: async () => {
             try {
-                const response = await fetch(`https://localhost:7199/api/Citizens/${citizen.citizenId}`, {
-                    method: "PUT",
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ name, dob, phoneNumber, email })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to update citizen.');
-                }
-
+                const response = await editCitizen({ name, dob, phoneNumber, email }, citizen.citizenId)
                 setSnackbarMessage('Citizen updated successfully.');
                 setSnackbarOpen(true);
                 queryClient.invalidateQueries({queryKey: ['citizens']});

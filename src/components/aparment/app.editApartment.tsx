@@ -1,5 +1,6 @@
 // app.editApartment.tsx
 import React, { useState } from 'react';
+import { Apartment } from '@/type';
 import {
     Button,
     Dialog,
@@ -9,14 +10,9 @@ import {
     TextField
 } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
+import { editApartment } from '@/service/apartmentService';
 interface EditApartmentProps {
-    apartment: {
-        apartmentId: number;
-        unitNumber: string;
-        floor: number;
-        size: number;
-    };
+    apartment: Apartment
     onClose: () => void;
 }
 
@@ -28,18 +24,7 @@ export const EditApartment = ({ apartment, onClose }: EditApartmentProps) => {
 
     const { mutate } = useMutation({
         mutationFn: async () => {
-            const response = await fetch(`https://localhost:7199/api/Apartments/${apartment.apartmentId}`, {
-                method: "PUT",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ unitNumber, floor, size })
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to update apartment.');
-            }
+            const response = await editApartment({ unitNumber, floor, size }, apartment.apartmentId)
             queryClient.invalidateQueries({queryKey: ['apartments']});
             onClose();
         }
