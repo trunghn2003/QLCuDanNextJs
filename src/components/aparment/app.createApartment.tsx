@@ -71,7 +71,7 @@ export const CreateApartment = () => {
                     <Stack spacing={2} margin={2}>
                         <TextField
                             variant='outlined'
-                            label='Unit Number'
+                            label='Apartment Name'
                             value={unitNumber}
                             onChange={(e) => setUnitNumber(e.target.value)}
                         />

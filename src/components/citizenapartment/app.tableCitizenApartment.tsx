@@ -56,11 +56,11 @@ function TableCitizenApartment() {
         queryKey: ['citizenApartments'],
         queryFn: fetchCitizenApartments
     });
-    const { data: apartments} = useQuery({
+    const { data: apartments } = useQuery({
         queryKey: ['apartments'],
         queryFn: fetchApartments
     });
-    const { data: citizens} = useQuery({
+    const { data: citizens } = useQuery({
         queryKey: ['citizens'],
         queryFn: fetchCitizens
     });
@@ -72,7 +72,7 @@ function TableCitizenApartment() {
             if (!response.ok) {
                 throw new Error('Failed to delete citizen apartment.');
             }
-            queryClient.invalidateQueries({queryKey:['citizenApartments']});
+            queryClient.invalidateQueries({ queryKey: ['citizenApartments'] });
         }
     });
 
@@ -84,9 +84,7 @@ function TableCitizenApartment() {
 
     return (
         <>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-                <CreateCitizenApartment />
-            </Box>
+
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
@@ -94,10 +92,13 @@ function TableCitizenApartment() {
                             <TableCell>Citizen ID</TableCell>
                             <TableCell>Citizen Name</TableCell>
                             <TableCell>Apartment ID</TableCell>
-                            <TableCell>Unit Number</TableCell>
+                            <TableCell>Apartment Name</TableCell>
                             <TableCell>Start Date</TableCell>
                             <TableCell>End Date</TableCell>
                             <TableCell>Actions</TableCell>
+                            <TableCell> <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+                                <CreateCitizenApartment />
+                            </Box></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -136,6 +137,7 @@ function TableCitizenApartment() {
                 <EditCitizenApartment
                     citizenApartment={editingCitizenApartment}
                     onClose={() => setEditingCitizenApartment(null)}
+                    onUpdate= {() =>setEditingCitizenApartment(null)}
                 />
             )}
         </>
