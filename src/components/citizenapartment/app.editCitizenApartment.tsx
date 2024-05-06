@@ -1,4 +1,3 @@
-// EditCitizenApartment.js
 import React, { useState, useEffect } from "react";
 import {
     Button,
@@ -13,38 +12,36 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { isQueryKey } from "react-query/types/core/utils";
-import { CitizenApartment } from "@/type";
+import { CitizenApartment, EditCitizenApartmentProps } from "@/type";
 
-interface EditCitizenApartmentProps {
-    citizenApartment: CitizenApartment
-    onClose: () => void;
-}
+// Hàm định dạng ngày chuẩn
+const formatDateLocal = (dateString?: string) => {
+    if (!dateString) return '';
 
-export const EditCitizenApartment = ({ citizenApartment, onClose }: EditCitizenApartmentProps) => {
+    const d = new Date(dateString);
+    const month = `${d.getMonth() + 1}`.padStart(2, '0');
+    const day = `${d.getDate()}`.padStart(2, '0');
+    const year = d.getFullYear();
+
+    return [year, month, day].join('-');
+};
+
+export const EditCitizenApartment = ({ citizenApartment, onClose, onUpdate }: EditCitizenApartmentProps) => {
     const queryClient = useQueryClient();
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
 
+    // Cập nhật giá trị ngày bắt đầu và kết thúc từ đối tượng `citizenApartment`
     useEffect(() => {
-        // Format the dates to `YYYY-MM-DD`
-        const localStartDate = new Date(citizenApartment.startDate);
-        const formattedStartDate = localStartDate.toISOString().split('T')[0];
-        setStartDate(formattedStartDate);
-
-        if (citizenApartment.endDate) {
-            const localEndDate = new Date(citizenApartment.endDate);
-            const formattedEndDate = localEndDate.toISOString().split('T')[0];
-            setEndDate(formattedEndDate);
-        } else {
-            setEndDate('');
-        }
+        setStartDate(formatDateLocal(citizenApartment.startDate));
+        setEndDate(formatDateLocal(citizenApartment.endDate));
     }, [citizenApartment]);
 
     const handleSnackbarClose = () => setSnackbarOpen(false);
 
+    // Tạo mutation để cập nhật thông tin `CitizenApartment`
     const mutation = useMutation({
         mutationFn: async () => {
             try {
@@ -68,9 +65,9 @@ export const EditCitizenApartment = ({ citizenApartment, onClose }: EditCitizenA
 
                 setSnackbarMessage('Citizen apartment updated successfully.');
                 setSnackbarOpen(true);
-                queryClient.invalidateQueries({queryKey: ['citizenApartments']});
-
-                onClose(); // Close the dialog on success
+                onUpdate();
+                queryClient.invalidateQueries({ queryKey: ['citizenApartments'] });
+                onClose(); // Đóng hộp thoại sau khi thành công
             } catch (error) {
                 setSnackbarMessage('Failed to update citizen apartment.');
                 setSnackbarOpen(true);
@@ -78,6 +75,7 @@ export const EditCitizenApartment = ({ citizenApartment, onClose }: EditCitizenA
         }
     });
 
+    // Gọi hàm mutation để cập nhật thông tin
     const handleUpdate = () => mutation.mutate();
 
     return (
