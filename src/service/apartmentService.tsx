@@ -15,3 +15,9 @@ export const deleteApartment = async (id: number) => {
     const result = await deleteRequest(`Apartments/${id}`);
        return result;
 }
+
+export const getCitizensByApartment = async (apartmentId: number) => {
+    const result = await get(`Citizens/${apartmentId}/Apartment`);
+    return result;
+};
+
