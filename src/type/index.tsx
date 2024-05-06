@@ -20,3 +20,15 @@ export interface CitizenApartment {
     startDate: string;
     endDate: string;
 }
+interface EditApartmentProps {
+    apartment: Apartment;
+    onClose: () => void;
+}
+
+export interface EditCitizenApartmentProps {
+    citizenApartment: CitizenApartment
+    onClose: () => void;
+    onUpdate: () => void;
+}
+
+
